@@ -1,56 +1,114 @@
-# RA2311003011748 Project
+# Backend Microservices Project  
+### (Logging Middleware + Vehicle Scheduler + Notification System)
 
-This repository contains three main components:
+## Project Overview
+This project is a backend system built using **Node.js** that demonstrates:
+- Custom **Logging Middleware**
+- **Vehicle Maintenance Scheduler** using DSA (Knapsack Algorithm)
+- **Campus Notification Microservice**
 
-## 1. Logging Middleware
-A Node.js middleware for logging requests and responses. Useful for tracking and debugging application behavior.
-- **Location:** `logging_middleware/`
-- **How to install:**
-  ```sh
-  cd logging_middleware
-  npm install
-  ```
-- **How to use:**
-  Import and use the middleware in your Node.js application.
-
-## 2. Notification App Backend
-A backend service for managing notifications, including a priority inbox system.
-- **Location:** `notification_app_be/`
-- **How to install dependencies:**
-  ```sh
-  cd notification_app_be
-  npm install
-  ```
-- **How to run:**
-  ```sh
-  node priorityInbox.js
-  ```
-- **Features:**
-  - Priority inbox management
-  - Notification handling
-
-## 3. Vehicle Maintenance Scheduler
-A backend service for scheduling and managing vehicle maintenance tasks.
-- **Location:** `vehicle_maintence_scheduler/`
-- **How to install dependencies:**
-  ```sh
-  cd vehicle_maintence_scheduler
-  npm install
-  ```
-- **How to run:**
-  ```sh
-  node index.js
-  ```
-- **Features:**
-  - Schedule maintenance
-  - Track vehicle service history
-
-## General Notes
-- Each subproject has its own `package.json` and should be installed separately.
-- Make sure Node.js is installed on your system.
-- `.gitignore` files are present to exclude `node_modules` and other unnecessary files from version control.
-
-## Screenshots
-Screenshots for the vehicle maintenance scheduler can be found in `vehicle_maintence_scheduler/screenshots/`.
+The system follows a **microservices-based architecture** and integrates with external APIs for evaluation.
 
 ---
+
+## Tech Stack
+- Node.js
+- Express.js
+- Axios
+- REST APIs
+
+---
+
+## Project Structure
+
+notification_app_be/
+│
+├── logging_middleware/
+├── vehicle_maintenance_scheduler/
+├── priorityInbox.js
+├── package.json
+├── .gitignore
+└── README.md
+
+---
+
+## Features
+
+### 1. Logging Middleware
+- Centralized logging system
+- Sends logs to external evaluation API
+- Supports:
+  - Levels: debug, info, warn, error, fatal
+  - Stack: backend/frontend
+  - Packages: controller, service, route, etc.
+
+---
+
+### 2. Vehicle Maintenance Scheduler
+- Implements **0/1 Knapsack Algorithm**
+- Optimizes:
+  - Maximum impact
+  - Within limited working hours
+- Fetches data from APIs dynamically
+
+---
+
+### 3. Notification System
+- Priority-based inbox system
+- Handles event-driven notifications
+- Clean backend modular structure
+
+---
+
+## Setup Instructions
+
+### Clone Repository
+git clone https://github.com/Lakshya1002/RA2311003011748.git
+cd RA2311003011748/notification_app_be
+
+---
+
+### Install Dependencies
+npm install
+
+---
+
+### Add Environment Variables
+Create `.env` file:
+
+TOKEN=your_access_token_here
+
+---
+
+### Run Project
+node priorityInbox.js
+
+---
+
+## Important Notes
+
+- Do NOT use console.log
+- Use logging middleware for all logs
+- Do NOT upload node_modules
+- Ensure .gitignore is properly configured
+
+---
+
+## API Integration
+- Registration API
+- Auth Token API
+- Logging API
+- Vehicle Data API
+
+---
+
+## Algorithm Used
+
+### 0/1 Knapsack Problem
+Maximize: Impact  
+Constraint: Total Duration ≤ Available Hours
+
+---
+
+
+
