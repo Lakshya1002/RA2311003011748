@@ -210,7 +210,6 @@ CREATE TABLE students (
   email VARCHAR(255) UNIQUE NOT NULL,
   created_at TIMESTAMP DEFAULT NOW()
 );
-
 -- Notifications table
 CREATE TABLE notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -218,8 +217,7 @@ CREATE TABLE notifications (
   message TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW()
 );
-
--- Student Notifications (junction table)
+-- Student Notifications 
 CREATE TABLE student_notifications (
   id SERIAL PRIMARY KEY,
   student_id INTEGER REFERENCES students(id) ON DELETE CASCADE,
@@ -229,9 +227,7 @@ CREATE TABLE student_notifications (
   created_at TIMESTAMP DEFAULT NOW()
 );
 ```
-
 ---
-
 ### Problems as Data Volume Increases
 
 1. **Full table scans** - querying unread notifications without indexes is O(n)
@@ -319,15 +315,15 @@ LIMIT 20;
 
 #### Correct indexes to add:
 ```sql
--- Most important: composite index for common query pattern
+
 CREATE INDEX idx_student_notifications_student_read
 ON student_notifications(student_id, is_read);
 
--- For sorting by date
+
 CREATE INDEX idx_notifications_created_at
 ON notifications(created_at DESC);
 
--- For filtering by type
+
 CREATE INDEX idx_notifications_type
 ON notifications(type);
 ```
@@ -364,18 +360,18 @@ Notifications fetched on every page load for every student is overwhelming the D
 - On page load: check Redis first, only hit DB on cache miss
 
 **Tradeoffs:**
-- ✅ Reduces DB load by 90%+
-- ✅ Response time drops from ~500ms to ~5ms
-- ❌ Extra infrastructure (Redis server)
-- ❌ Cache invalidation complexity
-- ❌ Slight staleness (up to TTL seconds)
+-  Reduces DB load by 90%+
+-  Response time drops from ~500ms to ~5ms
+-  Extra infrastructure (Redis server)
+-  Cache invalidation complexity
+-  Slight staleness (up to TTL seconds)
 
 ```javascript
-// Check cache first
+
 const cached = await redis.get(`notifications:${studentID}`);
 if (cached) return JSON.parse(cached);
 
-// DB fallback
+
 const data = await db.query(...);
 await redis.setex(`notifications:${studentID}`, 60, JSON.stringify(data));
 return data;
@@ -391,10 +387,10 @@ return data;
 - Use infinite scroll or "Load more" button
 
 **Tradeoffs:**
-- ✅ Simple to implement
-- ✅ Reduces data transfer significantly
-- ❌ Students may miss older notifications
-- ❌ Still hits DB on every page change
+- Simple to implement
+- Reduces data transfer significantly
+- Students may miss older notifications
+- Still hits DB on every page change
 
 ---
 
@@ -403,8 +399,8 @@ return data;
 For global notifications (sent to all students), cache at CDN level.
 
 **Tradeoffs:**
-- ✅ Extremely fast globally
-- ❌ Only works for non-personalized notifications
+- Extremely fast globally
+- Only works for non-personalized notifications
 
 ---
 
@@ -468,12 +464,12 @@ function process_queue_job(job):
 ```
 
 **Improvements:**
-- ✅ Bulk DB insert instead of 50,000 individual inserts
-- ✅ Parallel processing via multiple queue workers
-- ✅ Automatic retry with exponential backoff
-- ✅ DB and email decoupled - DB is source of truth
-- ✅ Server is not blocked
-- ✅ Failed emails tracked and retried
+- Bulk DB insert instead of 50,000 individual inserts
+- Parallel processing via multiple queue workers
+- Automatic retry with exponential backoff
+- DB and email decoupled - DB is source of truth
+- Server is not blocked
+- Failed emails tracked and retried
 
 ---
 
